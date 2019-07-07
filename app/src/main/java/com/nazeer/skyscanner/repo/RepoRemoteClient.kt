@@ -4,7 +4,10 @@ import com.nazeer.skyscanner.api.SkyScannerService
 import com.nazeer.skyscanner.models.ProcessedSearchResults
 import io.reactivex.Single
 
-class RepoRemoteClient(val skyScannerService: SkyScannerService, private val rawFlightsResponseToTripITamsConverter: RawFlightsResponseToTripITamsConverter) :
+class RepoRemoteClient(
+    val skyScannerService: SkyScannerService,
+    private val flightSearchResultProcessor: FlightSearchResultProcessor
+) :
     RepoClient {
     override fun getFlights(
         cabinClass: String,
@@ -39,7 +42,7 @@ class RepoRemoteClient(val skyScannerService: SkyScannerService, private val raw
             val newUrl = it.replaceFirst("http", "https")
             skyScannerService.pollSession(newUrl)
         }.map {
-            ProcessedSearchResults(rawFlightsResponseToTripITamsConverter.createTripItemsFromResponse(it))
+          flightSearchResultProcessor.createProcessedTripSearchResults(it)
         }
     }
 

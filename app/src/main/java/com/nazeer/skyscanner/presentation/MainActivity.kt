@@ -1,35 +1,56 @@
 package com.nazeer.skyscanner.presentation
 
 import android.os.Bundle
+import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import com.nazeer.skyscanner.DependencyManager
 import com.nazeer.skyscanner.R
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import android.widget.Toast
+import android.view.MenuItem
+
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var screen: SRScreenImp
+    lateinit var presenter: SRPresenter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        val repo = DependencyManager.getRepo()
-        val service = repo.getFlights(
-            "Economy",
-            "UK",
-            "GBP",
-            "en-GB",
-            "sky",
-            "EDI-sky",
-            "LOND-sky",
-            "2020-05-30",
-            "2020-06-02",
-            1,
-            0,
-            0)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { response , error ->
-                println("hi")
-            }
+        screen = SRScreenImp(this)
+        setContentView(screen)
+        screen.getToolbar()?.let {
+            setSupportActionBar(screen.getToolbar())
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            supportActionBar?.setDisplayShowHomeEnabled(true)
+            supportActionBar?.setDisplayShowTitleEnabled(false)
+        }
+
+        if (lastCustomNonConfigurationInstance == null) {
+            presenter = DependencyManager.getSearchResultsPresenter()
+        } else {
+            presenter = lastCustomNonConfigurationInstance as SRPresenter
+        }
+        presenter.connectScreen(screen)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.destroy()
+    }
+
+    override fun onRetainCustomNonConfigurationInstance(): Any {
+        return presenter
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        return screen.onCreateOptionsMenu(menu, menuInflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.getItemId()) {
+            android.R.id.home -> finish()
+        }
+        return true
     }
 }

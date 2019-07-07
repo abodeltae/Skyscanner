@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">SkyScanner</string>
+    <string name="duration_hour_minute">%1$dh %2$dm</string>
+    <string name="price_currency">%2$s%1$d</string>
+    <string name="direct">Direct</string>
+    <string name="via_agent">via %s</string>
+    <string name="adults_count">%d adult</string>
+    <string name="sort_filter"><![CDATA[SORT & FILTERS]]></string>
+    <string name="loading">Loading</string>
+    <string name="res_count_from_total">%1$d of %2$d results</string>
+    <string name="somethingWrong">Sorry , something went wrong !</string>
+    <string name="search">Search</string>
 </resources>

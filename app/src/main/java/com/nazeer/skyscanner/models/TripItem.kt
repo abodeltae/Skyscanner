@@ -14,8 +14,8 @@ data class ProcessedLeg(
 
 data class TripItem(
     val agent: Agent,
-    val outBoundLeg: ProcessedLeg,
-    val inBoundLeg: ProcessedLeg?,
+    val outboundLeg: ProcessedLeg,
+    val inboundLeg: ProcessedLeg,
     val price: Double,
     val priceCurrency: Currency
 )
